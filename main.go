@@ -2,12 +2,14 @@ package main
 
 import (
 	stdlog "log"
+	"net/http"
 	"os"
 
 	"github.com/Masterminds/log-go"
 	"github.com/crooks/jlog"
 	loglevel "github.com/crooks/log-go-level"
 	"github.com/crooks/prom_probe/config"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -45,4 +47,6 @@ func main() {
 		log.Debugf("Logging to file %s has been initialised at level: %s", cfg.Logging.Filename, cfg.Logging.LevelStr)
 	}
 	initCollectors()
+	http.Handle("/metrics", promhttp.Handler())
+	http.ListenAndServe("localhost:8080", nil)
 }
