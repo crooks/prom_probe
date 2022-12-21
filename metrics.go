@@ -1,26 +1,43 @@
 package main
 
 import (
-	"strings"
-
-	"github.com/Masterminds/log-go"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
-	sampleMetric *prometheus.GaugeVec
+	probeDuration prometheus.Gauge
+	probeSuccess  prometheus.Gauge
+	sampleMetric  prometheus.Gauge
+	sampleWidget  *prometheus.GaugeVec
 )
 
 func initCollectors() {
-	defaultLabels := []string{"instance"}
-	log.Debugf("Default labels: %v", strings.Join(defaultLabels, ","))
+	probeDuration = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "probe_duration",
+			Help: "How many seconds the probe took",
+		},
+	)
 
-	sampleMetric = prometheus.NewGaugeVec(
+	probeSuccess = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "probe_success",
+			Help: "Whether or not the probe succeeded",
+		},
+	)
+
+	sampleMetric = prometheus.NewGauge(
 		prometheus.GaugeOpts{
 			Name: "sample_metric",
 			Help: "An example gauge metric",
 		},
-		defaultLabels,
 	)
-	prometheus.MustRegister(sampleMetric)
+
+	sampleWidget = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "sample_widget",
+			Help: "An example gauge metric with a label",
+		},
+		[]string{"widget"},
+	)
 }
