@@ -17,6 +17,7 @@ type Flags struct {
 
 type Config struct {
 	Logging struct {
+		Filename string `yaml:"filename"`
 		Journal  bool   `yaml:"journal"`
 		LevelStr string `yaml:"level"`
 	} `yaml:"logging"`
